@@ -69,9 +69,6 @@ app.delete('/usuarios/:id', (req, res) => {
   });
 });
 
-// Repita o mesmo padrão para as outras tabelas (clientes, pets, produtos, servicos)
-// Vou te ajudar com uma tabela só para você ver o padrão.
-
 app.listen(3000, () => {
   console.log('API rodando na porta 3000');
 });
@@ -120,3 +117,163 @@ app.delete('/clientes/:id', (req, res) => {
     res.json({ message: 'Cliente deletado com sucesso' });
   });
 });
+// CREATE pet
+app.post('/pets', (req, res) => {
+  const { nome, tipo, cliente_id } = req.body;
+  db.query(
+    'INSERT INTO pets (nome, tipo, cliente_id) VALUES (?, ?, ?)',
+    [nome, tipo, cliente_id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ id: results.insertId, nome, tipo, cliente_id });
+    }
+  );
+});
+
+// READ all pets
+app.get('/pets', (req, res) => {
+  db.query('SELECT * FROM pets', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// READ pet by id
+app.get('/pets/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('SELECT * FROM pets WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) return res.status(404).json({ message: 'Pet não encontrado' });
+    res.json(results[0]);
+  });
+});
+
+// UPDATE pet
+app.put('/pets/:id', (req, res) => {
+  const id = req.params.id;
+  const { nome, tipo, cliente_id } = req.body;
+  db.query(
+    'UPDATE pets SET nome = ?, tipo = ?, cliente_id = ? WHERE id = ?',
+    [nome, tipo, cliente_id, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Pet atualizado com sucesso' });
+    }
+  );
+});
+
+// DELETE pet
+app.delete('/pets/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('DELETE FROM pets WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Pet deletado com sucesso' });
+  });
+});
+// CREATE produto
+app.post('/produtos', (req, res) => {
+  const { nome, preco } = req.body;
+  db.query(
+    'INSERT INTO produtos (nome, preco) VALUES (?, ?)',
+    [nome, preco],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ id: results.insertId, nome, preco });
+    }
+  );
+});
+
+// READ all produtos
+app.get('/produtos', (req, res) => {
+  db.query('SELECT * FROM produtos', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// READ produto by id
+app.get('/produtos/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('SELECT * FROM produtos WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) return res.status(404).json({ message: 'Produto não encontrado' });
+    res.json(results[0]);
+  });
+});
+
+// UPDATE produto
+app.put('/produtos/:id', (req, res) => {
+  const id = req.params.id;
+  const { nome, preco } = req.body;
+  db.query(
+    'UPDATE produtos SET nome = ?, preco = ? WHERE id = ?',
+    [nome, preco, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Produto atualizado com sucesso' });
+    }
+  );
+});
+
+// DELETE produto
+app.delete('/produtos/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('DELETE FROM produtos WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Produto deletado com sucesso' });
+  });
+});
+// CREATE serviço
+app.post('/servicos', (req, res) => {
+  const { descricao, preco } = req.body;
+  db.query(
+    'INSERT INTO servicos (descricao, preco) VALUES (?, ?)',
+    [descricao, preco],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ id: results.insertId, descricao, preco });
+    }
+  );
+});
+
+// READ all serviços
+app.get('/servicos', (req, res) => {
+  db.query('SELECT * FROM servicos', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// READ serviço by id
+app.get('/servicos/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('SELECT * FROM servicos WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) return res.status(404).json({ message: 'Serviço não encontrado' });
+    res.json(results[0]);
+  });
+});
+
+// UPDATE serviço
+app.put('/servicos/:id', (req, res) => {
+  const id = req.params.id;
+  const { descricao, preco } = req.body;
+  db.query(
+    'UPDATE servicos SET descricao = ?, preco = ? WHERE id = ?',
+    [descricao, preco, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Serviço atualizado com sucesso' });
+    }
+  );
+});
+
+// DELETE serviço
+app.delete('/servicos/:id', (req, res) => {
+  const id = req.params.id;
+  db.query('DELETE FROM servicos WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Serviço deletado com sucesso' });
+  });
+});
+
